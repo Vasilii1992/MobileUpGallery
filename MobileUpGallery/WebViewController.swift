@@ -8,7 +8,14 @@
 import UIKit
 import WebKit
 
+protocol WebViewControllerDelegate: AnyObject {
+    func didReceiveAccessToken(_ token: String)
+}
+
 class WebViewController: UIViewController {
+    
+    weak var delegate: WebViewControllerDelegate?
+
     
     private let webView = WKWebView()
     private let urlString: String
@@ -16,6 +23,8 @@ class WebViewController: UIViewController {
     init(with urlString: String) {
         self.urlString = urlString
         super.init(nibName: nil, bundle: nil)
+        webView.navigationDelegate = self
+
     }
     
     required init?(coder: NSCoder) {
@@ -28,9 +37,7 @@ class WebViewController: UIViewController {
         webViewLoad(urlString: urlString)
         setupViews()
         setConstraints()
-
-        
-        
+   
     }
     
     private func webViewLoad(urlString: String) {
@@ -46,15 +53,9 @@ class WebViewController: UIViewController {
     
     private func setupViews() {
         view.addSubview(webView)
-        
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(didTapDone))
-        
+            
     }
-    
-    @objc func didTapDone() {
-        dismiss(animated: true)
-    }
-    
+
     private func setConstraints() {
         webView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -64,5 +65,28 @@ class WebViewController: UIViewController {
             webView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             webView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+    }
+}
+
+// MARK: - WKNavigationDelegate
+extension WebViewController: WKNavigationDelegate {
+    
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        if let url = webView.url, url.absoluteString.starts(with: "https://oauth.vk.com/blank.html") {
+            if let fragment = url.fragment {
+                let params = fragment.components(separatedBy: "&")
+                var dict = [String: String]()
+                for param in params {
+                    let keyValue = param.components(separatedBy: "=")
+                    if keyValue.count == 2 {
+                        dict[keyValue[0]] = keyValue[1]
+                    }
+                }
+                
+                if let accessToken = dict["access_token"] {
+                    delegate?.didReceiveAccessToken(accessToken)
+                }
+            }
+        }
     }
 }

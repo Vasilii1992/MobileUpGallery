@@ -6,8 +6,13 @@
 //
 
 import UIKit
+import WebKit
 
-class ViewController: UIViewController {
+class MainViewController: UIViewController {
+    
+    private let clientId = "52141017"
+    private let redirectURI = "https://oauth.vk.com/blank.html"
+    private let scope = "photos"
     
     private lazy var authorizationButton: UIButton = {
         let button = UIButton(type: .system)
@@ -40,12 +45,13 @@ class ViewController: UIViewController {
         setupViews()
         setConstraints()
         
-        
     }
     
     @objc func authorizationButtonTapped() {
+        let authURL = "https://oauth.vk.com/authorize?client_id=\(clientId)&display=mobile&redirect_uri=\(redirectURI)&scope=\(scope)&response_type=token&v=5.131"
         
-        let webViewController = WebViewController(with: "https://www.vk.com")
+        let webViewController = WebViewController(with: authURL)
+        webViewController.delegate = self
         let navigation = UINavigationController(rootViewController: webViewController)
         self.present(navigation, animated: true)
     }
@@ -64,13 +70,26 @@ class ViewController: UIViewController {
             galleryLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             galleryLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             
-            
             authorizationButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             authorizationButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -40)
         
-        
         ])
     }
-
 }
 
+extension MainViewController: WebViewControllerDelegate {
+    func didReceiveAccessToken(_ token: String) {
+        print("Access Token: \(token)")
+        dismiss(animated: true) { [weak self] in
+            guard let self = self else { return }
+            let galleryViewController = GalleryViewController()
+            let navigationController = UINavigationController(rootViewController: galleryViewController)
+            navigationController.modalPresentationStyle = .fullScreen
+            self.present(navigationController, animated: true, completion: nil)
+        }
+    }
+}
+
+/*
+ 
+ */

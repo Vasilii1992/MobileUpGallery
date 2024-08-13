@@ -1,9 +1,4 @@
-//
-//  GalleryViewController.swift
-//  MobileUpGallery
-//
-//  Created by Василий Тихонов on 13.08.2024.
-//
+
 import UIKit
 
 class GalleryViewController: UIViewController {
@@ -14,6 +9,15 @@ class GalleryViewController: UIViewController {
         segmentControl.selectedSegmentIndex = 0
         segmentControl.addTarget(self, action: #selector(segmentAction), for: .valueChanged)
         return segmentControl
+    }()
+    
+    private lazy var exitBarButtonItem: UIBarButtonItem = {
+        let barButtonItem = UIBarButtonItem(title: "Выход",
+                                            style: .plain,
+                                            target: self,
+                                            action: #selector(exitBarButtonItemTapped))
+        barButtonItem.tintColor = .black
+        return barButtonItem
     }()
     
     private lazy var photoViewController: PhotoViewController = {
@@ -35,6 +39,11 @@ class GalleryViewController: UIViewController {
         setupViews()
         setConstraints()
         segmentAction(sender: segmentControl)
+        
+    }
+    
+    @objc func exitBarButtonItemTapped() {
+        dismiss(animated: true)
     }
     
     @objc func segmentAction(sender: UISegmentedControl) {
@@ -60,6 +69,9 @@ class GalleryViewController: UIViewController {
         
         photoViewController.didMove(toParent: self)
         videoViewController.didMove(toParent: self)
+        
+        navigationItem.rightBarButtonItem = exitBarButtonItem
+
     }
     
     private func showViewController(_ viewController: UIViewController) {

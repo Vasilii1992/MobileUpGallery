@@ -16,21 +16,7 @@ class PhotoViewController: UIViewController {
     
     private let networkService = NetworkService.shared
 
-    
-    
-    var collectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.minimumLineSpacing = 10
-        layout.minimumInteritemSpacing = 10
-        layout.sectionInset = UIEdgeInsets(top: 10, left: 16, bottom: 10, right: 16)
-        layout.itemSize = CGSize(width: (UIScreen.main.bounds.width - 48) / 2, height: (UIScreen.main.bounds.width - 48) / 2)
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.backgroundColor = .white
-        collectionView.register(PhotoCell.self, forCellWithReuseIdentifier: PhotoCell.reuseId)
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        return collectionView
-    }()
-    
+    let collectionView = PhotoCollectionView.createPhotoCollectionView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -120,3 +106,29 @@ extension PhotoViewController: UICollectionViewDataSource, UICollectionViewDeleg
     }
 }
 
+// MARK: - UICollectionViewDelegateFlowLayout
+extension PhotoViewController: UICollectionViewDelegateFlowLayout {
+    
+    private var numberOfColumns: Int { return 2 }
+    
+    private var cellSpacing: CGFloat { return 5 }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let totalSpacing = cellSpacing * CGFloat(numberOfColumns - 1) // Only spacing between cells
+        let itemWidth = (collectionView.bounds.width - totalSpacing) / CGFloat(numberOfColumns)
+        
+        return CGSize(width: itemWidth, height: itemWidth)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: cellSpacing, left: 0, bottom: cellSpacing, right: 0)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return cellSpacing
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return cellSpacing
+    }
+}

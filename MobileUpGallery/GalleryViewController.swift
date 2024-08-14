@@ -25,6 +25,7 @@ class GalleryViewController: UIViewController {
     private lazy var photoViewController: PhotoViewController = {
         let viewController = PhotoViewController()
         viewController.accessToken = accessToken
+        
         addChild(viewController)
         viewController.view.translatesAutoresizingMaskIntoConstraints = false
         return viewController

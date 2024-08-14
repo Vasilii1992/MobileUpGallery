@@ -18,10 +18,10 @@ class WebViewController: UIViewController {
 
     
     private let webView = WKWebView()
-    private let urlString: String
+    private let url: URL
     
-    init(with urlString: String) {
-        self.urlString = urlString
+    init(with url: URL) {
+        self.url = url
         super.init(nibName: nil, bundle: nil)
         webView.navigationDelegate = self
 
@@ -34,18 +34,14 @@ class WebViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        webViewLoad(urlString: urlString)
+        webViewLoad(url: url)
         setupViews()
         setConstraints()
    
     }
     
-    private func webViewLoad(urlString: String) {
-        
-        guard let url = URL(string: urlString) else {
-            self.dismiss(animated: true)
-            return
-        }
+    private func webViewLoad(url: URL) {
+
         let urlRequest = URLRequest(url: url)
         webView.load(urlRequest)
         

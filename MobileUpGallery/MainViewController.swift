@@ -10,10 +10,6 @@ import WebKit
 
 class MainViewController: UIViewController {
     
-    private let clientId = "52141017"
-    private let redirectURI = "https://oauth.vk.com/blank.html"
-    private let scope = "photos"
-    
     private lazy var authorizationButton: UIButton = {
         let button = UIButton(type: .system)
         button.backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
@@ -48,9 +44,8 @@ class MainViewController: UIViewController {
     }
     
     @objc func authorizationButtonTapped() {
-        let authURL = "https://oauth.vk.com/authorize?client_id=\(clientId)&display=mobile&redirect_uri=\(redirectURI)&scope=\(scope)&response_type=token&v=5.131"
-        
-        let webViewController = WebViewController(with: authURL)
+
+        let webViewController = WebViewController(with: UrlComponents.createUrl())
         webViewController.delegate = self
         let navigation = UINavigationController(rootViewController: webViewController)
         self.present(navigation, animated: true)
@@ -83,13 +78,10 @@ extension MainViewController: WebViewControllerDelegate {
         dismiss(animated: true) { [weak self] in
             guard let self = self else { return }
             let galleryViewController = GalleryViewController()
+            galleryViewController.accessToken = token
             let navigationController = UINavigationController(rootViewController: galleryViewController)
             navigationController.modalPresentationStyle = .fullScreen
             self.present(navigationController, animated: true, completion: nil)
         }
     }
 }
-
-/*
- 
- */

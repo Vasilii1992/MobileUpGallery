@@ -2,6 +2,8 @@
 import UIKit
 
 class GalleryViewController: UIViewController {
+    
+    var accessToken: String?
 
     private lazy var segmentControl: UISegmentedControl = {
         let segmentControl = UISegmentedControl(items: ["Фото", "Видео"])
@@ -19,9 +21,10 @@ class GalleryViewController: UIViewController {
         barButtonItem.tintColor = .black
         return barButtonItem
     }()
-    
+
     private lazy var photoViewController: PhotoViewController = {
         let viewController = PhotoViewController()
+        viewController.accessToken = accessToken
         addChild(viewController)
         viewController.view.translatesAutoresizingMaskIntoConstraints = false
         return viewController

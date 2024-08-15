@@ -8,7 +8,7 @@ class GalleryViewController: UIViewController {
     private lazy var segmentControl: UISegmentedControl = {
         let segmentControl = UISegmentedControl(items: ["Фото", "Видео"])
         segmentControl.translatesAutoresizingMaskIntoConstraints = false
-        segmentControl.selectedSegmentIndex = 0
+        segmentControl.selectedSegmentIndex = 1
         segmentControl.addTarget(self, action: #selector(segmentAction), for: .valueChanged)
         return segmentControl
     }()
@@ -33,11 +33,12 @@ class GalleryViewController: UIViewController {
     
     private lazy var videoViewController: VideoViewController = {
         let viewController = VideoViewController()
+        viewController.accessToken = accessToken
         addChild(viewController)
         viewController.view.translatesAutoresizingMaskIntoConstraints = false
         return viewController
     }()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()

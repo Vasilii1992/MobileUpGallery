@@ -11,7 +11,7 @@ import SDWebImage
 class PhotoViewController: UIViewController {
     
     var accessToken: String?
-    // получаю тюпл для того чтобы отсортировать по дате.
+    // заменить на структуру!
     var photos: [(String, Int)] = []
     
     private let networkService = NetworkService.shared

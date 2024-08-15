@@ -50,6 +50,4 @@ class PhotoCell: UICollectionViewCell {
             photoImageView.sd_setImage(with: url, placeholderImage: UIImage(named: "placeholder"), options: .highPriority, completed: nil)
         }
     }
-
-    
 }

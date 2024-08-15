@@ -104,6 +104,14 @@ extension PhotoViewController: UICollectionViewDataSource, UICollectionViewDeleg
         
         return cell
     }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let photoUrlString = photos[indexPath.item].0
+        let photoDate = photos[indexPath.item].1
+        
+        let vc = PhotoInfoViewController(urlString: photoUrlString, photoDate: photoDate)
+        navigationController?.pushViewController(vc, animated: true)
+    }
+
 }
 
 // MARK: - UICollectionViewDelegateFlowLayout
@@ -114,7 +122,7 @@ extension PhotoViewController: UICollectionViewDelegateFlowLayout {
     private var cellSpacing: CGFloat { return 5 }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let totalSpacing = cellSpacing * CGFloat(numberOfColumns - 1) // Only spacing between cells
+        let totalSpacing = cellSpacing * CGFloat(numberOfColumns - 1) 
         let itemWidth = (collectionView.bounds.width - totalSpacing) / CGFloat(numberOfColumns)
         
         return CGSize(width: itemWidth, height: itemWidth)

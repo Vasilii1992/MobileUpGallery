@@ -47,6 +47,7 @@ class GalleryViewController: UIViewController {
     }
     
     @objc func exitBarButtonItemTapped() {
+        UserDefaults.standard.removeObject(forKey: "vkAccessToken")
         dismiss(animated: true)
     }
     

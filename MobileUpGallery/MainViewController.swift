@@ -41,6 +41,11 @@ class MainViewController: UIViewController {
         setupViews()
         setConstraints()
         
+        if let token = UserDefaults.standard.string(forKey: "vkAccessToken") {
+            goToGalleryViewController(token: token)
+
+        }
+        
     }
     
     @objc func authorizationButtonTapped() {
@@ -70,18 +75,27 @@ class MainViewController: UIViewController {
         
         ])
     }
+    private func goToGalleryViewController(token: String) {
+        let galleryViewController = GalleryViewController()
+        galleryViewController.accessToken = token
+        let navigationController = UINavigationController(rootViewController: galleryViewController)
+        navigationController.modalPresentationStyle = .fullScreen
+        self.present(navigationController, animated: false, completion: nil)
+    }
 }
 
 extension MainViewController: WebViewControllerDelegate {
     func didReceiveAccessToken(_ token: String) {
         print("Access Token: \(token)")
+        
+        UserDefaults.standard.set(token, forKey: "vkAccessToken")
+        
         dismiss(animated: true) { [weak self] in
             guard let self = self else { return }
-            let galleryViewController = GalleryViewController()
-            galleryViewController.accessToken = token
-            let navigationController = UINavigationController(rootViewController: galleryViewController)
-            navigationController.modalPresentationStyle = .fullScreen
-            self.present(navigationController, animated: true, completion: nil)
+            goToGalleryViewController(token: token)
+            
+            
         }
     }
+    
 }

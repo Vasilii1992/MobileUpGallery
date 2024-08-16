@@ -59,60 +59,67 @@ class PhotoViewController: UIViewController {
     
     private func fetchAlbumsAndPhotos() {
         guard let accessToken = accessToken else {
-            print("No access token available")
+            showAlert(title: "Error", message: "No access token available")
             return
         }
         
-        networkService.fetchAlbums(accessToken: accessToken) { [weak self] albums in
-            guard let self = self, let albums = albums else {
-                print("Failed to fetch albums")
-                return
-            }
+        networkService.fetchAlbums(accessToken: accessToken) { [weak self] result in
+            guard let self = self else { return }
             
-           
-            let dispatchGroup = DispatchGroup()
-            
-            for album in albums {
-                if let albumId = album["id"] as? Int {
-                   
-                    dispatchGroup.enter()
-                    
-                    self.fetchPhotosFromAlbum(albumId: albumId) { success in
-                       
-                        dispatchGroup.leave()
+            switch result {
+            case .success(let albums):
+                let dispatchGroup = DispatchGroup()
+                
+                for album in albums {
+                    if let albumId = album["id"] as? Int {
+                        dispatchGroup.enter()
+                        self.fetchPhotosFromAlbum(albumId: albumId) { success in
+                            dispatchGroup.leave()
+                        }
                     }
                 }
-            }
-            
-            dispatchGroup.notify(queue: .main) {
-                self.photos.sort(by: { $0.photoDate > $1.photoDate })
-                self.collectionView.reloadData()
-                print("All photos loaded and UI updated")
-                print("\(self.photos.count) photos ")
-                self.activityIndicator.stopAnimating()
-                self.activityIndicator.isHidden = true
+                
+                dispatchGroup.notify(queue: .main) {
+                    self.photos.sort(by: { $0.photoDate > $1.photoDate })
+                    self.collectionView.reloadData()
+                    print("All photos loaded and UI updated")
+                    print("\(self.photos.count) photos")
+                    self.activityIndicator.stopAnimating()
+                    self.activityIndicator.isHidden = true
+                }
+                
+            case .failure(let error):
+                self.showAlert(title: "Failed to Fetch Albums", message: error.localizedDescription)
+
             }
         }
     }
 
     private func fetchPhotosFromAlbum(albumId: Int, completion: @escaping (Bool) -> Void) {
         guard let accessToken = accessToken else {
-            print("No access token available")
+            showAlert(title: "Error", message: "No access token available")
             completion(false)
             return
         }
         
-        networkService.fetchPhotos(albumId: albumId, accessToken: accessToken) { [weak self] photos in
-            guard let self = self, let photos = photos else {
-                print("Failed to fetch photos")
+        networkService.fetchPhotos(albumId: albumId, accessToken: accessToken) { [weak self] result in
+            guard let self = self else {
                 completion(false)
                 return
             }
             
-            self.photos.append(contentsOf: photos)
-            completion(true)
+            switch result {
+            case .success(let photos):
+                self.photos.append(contentsOf: photos)
+                completion(true)
+                
+            case .failure(let error):
+                self.showAlert(title: "Failed to Fetch Photos", message: error.localizedDescription)
+                completion(false)
+            }
         }
     }
+  
 }
 
 extension PhotoViewController: UICollectionViewDataSource, UICollectionViewDelegate {

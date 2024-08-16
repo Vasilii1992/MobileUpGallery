@@ -68,6 +68,7 @@ class PhotoInfoViewController: UIViewController {
     
     @objc func actionBarButtonTapped(sender: UIBarButtonItem) {
         guard let image = photoImageView.image else {
+            showAlert(title: "Error", message: "No photo available to save.")
             return
         }
         
@@ -75,17 +76,18 @@ class PhotoInfoViewController: UIViewController {
         activityViewController.popoverPresentationController?.barButtonItem = sender
         
         activityViewController.completionWithItemsHandler = { activity, success, items, error in
-            if success, let activityType = activity, activityType == .saveToCameraRoll {
-                let alert = UIAlertController(title: "Success",
-                                              message: "Photo saved to gallery!",
-                                              preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
+            if let error = error {
+                self.showAlert(title: "Save Error", message: error.localizedDescription)
+            } else if success, let activityType = activity, activityType == .saveToCameraRoll {
+
+                self.showAlert(title: "Success", message: "Photo saved to gallery!")
+
             }
         }
         
         present(activityViewController, animated: true, completion: nil)
     }
+
 
     @objc func exitBarButtonItemTapped() {
         navigationController?.popViewController(animated: true)

@@ -53,24 +53,27 @@ class VideoViewController: UIViewController {
     }
     
     private func fetchVideos() {
-            guard let accessToken = accessToken else {
-                print("No access token available")
-                return
-            }
+        guard let accessToken = accessToken else {
+            showAlert(title: "Error", message: "No access token available")
+            return
+        }
+        
+        networkService.fetchVideos(accessToken: accessToken) { [weak self] result in
+            guard let self = self else { return }
             
-            networkService.fetchVideos(accessToken: accessToken) { [weak self] videos in
-                guard let self = self, let videos = videos else {
-                    print("Failed to fetch videos")
-                    return
-                }
-                
+            switch result {
+            case .success(let videos):
                 self.videos = videos
-                
                 DispatchQueue.main.async {
                     self.collectionView.reloadData()
                 }
+                
+            case .failure(let error):
+                self.showAlert(title: "Failed to Fetch Videos", message: error.localizedDescription)
             }
         }
+    }
+
 }
 
 extension VideoViewController: UICollectionViewDataSource, UICollectionViewDelegate {

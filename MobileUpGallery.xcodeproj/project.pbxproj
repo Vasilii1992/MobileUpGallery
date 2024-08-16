@@ -27,6 +27,8 @@
 		6BE9CC8C2C6D287700A1420A /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE9CC8B2C6D287700A1420A /* NetworkService.swift */; };
 		6BE9CC8E2C6D2ED200A1420A /* UrlComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE9CC8D2C6D2ED200A1420A /* UrlComponents.swift */; };
 		6BFBFEBE2C6F64750010146E /* VideoInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BFBFEBD2C6F64750010146E /* VideoInfoViewController.swift */; };
+		6BFBFEC02C6FA75E0010146E /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BFBFEBF2C6FA75E0010146E /* NetworkError.swift */; };
+		6BFBFEC32C6FB0C30010146E /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BFBFEC22C6FB0C30010146E /* UIViewController+Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,6 +52,8 @@
 		6BE9CC8B2C6D287700A1420A /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		6BE9CC8D2C6D2ED200A1420A /* UrlComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrlComponents.swift; sourceTree = "<group>"; };
 		6BFBFEBD2C6F64750010146E /* VideoInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoInfoViewController.swift; sourceTree = "<group>"; };
+		6BFBFEBF2C6FA75E0010146E /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
+		6BFBFEC22C6FB0C30010146E /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +105,7 @@
 		6B40435C2C6B463A007E957D /* MobileUpGallery */ = {
 			isa = PBXGroup;
 			children = (
+				6BFBFEC12C6FB09C0010146E /* Extensions */,
 				6B2F235F2C6E983C0050A7D1 /* Models */,
 				6B4043712C6B4658007E957D /* Application */,
 				6B32230D2C6D4EC700D3FA9F /* UICollectionView */,
@@ -142,6 +147,7 @@
 			children = (
 				6BE9CC8B2C6D287700A1420A /* NetworkService.swift */,
 				6BE9CC8D2C6D2ED200A1420A /* UrlComponents.swift */,
+				6BFBFEBF2C6FA75E0010146E /* NetworkError.swift */,
 			);
 			path = NetworkService;
 			sourceTree = "<group>";
@@ -153,6 +159,14 @@
 				6B15C2FB2C6E391400F1AD87 /* VideoCell.swift */,
 			);
 			path = Cells;
+			sourceTree = "<group>";
+		};
+		6BFBFEC12C6FB09C0010146E /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				6BFBFEC22C6FB0C30010146E /* UIViewController+Extensions.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -232,9 +246,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6BFBFEC02C6FA75E0010146E /* NetworkError.swift in Sources */,
 				6B4043622C6B463A007E957D /* MainViewController.swift in Sources */,
 				6BE9CC8E2C6D2ED200A1420A /* UrlComponents.swift in Sources */,
 				6BA1364E2C6B66A900F9E798 /* VideoViewController.swift in Sources */,
+				6BFBFEC32C6FB0C30010146E /* UIViewController+Extensions.swift in Sources */,
 				6B40435E2C6B463A007E957D /* AppDelegate.swift in Sources */,
 				6BA136452C6B5D0000F9E798 /* GalleryViewController.swift in Sources */,
 				6B2F23612C6E984A0050A7D1 /* Video.swift in Sources */,

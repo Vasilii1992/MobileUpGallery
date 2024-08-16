@@ -70,7 +70,7 @@ class MainViewController: UIViewController {
             galleryLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             galleryLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             
-            authorizationButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            authorizationButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             authorizationButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -40)
         
         ])

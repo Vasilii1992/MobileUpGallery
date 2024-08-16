@@ -96,7 +96,7 @@ class PhotoInfoViewController: UIViewController {
         view.addSubview(photoImageView)
         
         NSLayoutConstraint.activate([
-            photoImageView.widthAnchor.constraint(equalToConstant: 375),
+            photoImageView.widthAnchor.constraint(equalTo: view.widthAnchor),
             photoImageView.heightAnchor.constraint(equalToConstant: 375),
             photoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             photoImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor)

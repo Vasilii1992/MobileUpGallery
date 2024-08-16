@@ -11,12 +11,17 @@ import SDWebImage
 class PhotoViewController: UIViewController {
     
     var accessToken: String?
-    // заменить на структуру!
-    var photos: [(String, Int)] = []
+    var photos: [Photo] = []
     
     private let networkService = NetworkService.shared
 
     let collectionView = PhotoCollectionView.createPhotoCollectionView()
+    
+    private let activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .large)
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        return indicator
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,6 +34,9 @@ class PhotoViewController: UIViewController {
     private func setupViews() {
         view.backgroundColor = .white
         view.addSubview(collectionView)
+        view.addSubview(activityIndicator)
+
+         activityIndicator.startAnimating()
         
     }
     
@@ -42,50 +50,69 @@ class PhotoViewController: UIViewController {
             collectionView.topAnchor.constraint(equalTo: view.topAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
     }
     
     private func fetchAlbumsAndPhotos() {
-           guard let accessToken = accessToken else {
-               print("No access token available")
-               return
-           }
-           
+        guard let accessToken = accessToken else {
+            print("No access token available")
+            return
+        }
+        
         networkService.fetchAlbums(accessToken: accessToken) { [weak self] albums in
-               guard let self = self, let albums = albums else {
-                   print("Failed to fetch albums")
-                   return
-               }
-               for album in albums {
-                   if let albumId = album["id"] as? Int {
-                       self.fetchPhotosFromAlbum(albumId: albumId)
-                   }
-               }
-           }
-       }
-
-       private func fetchPhotosFromAlbum(albumId: Int) {
-           guard let accessToken = accessToken else {
-               print("No access token available")
-               return
-           }
+            guard let self = self, let albums = albums else {
+                print("Failed to fetch albums")
+                return
+            }
+            
            
-           networkService.fetchPhotos(albumId: albumId, accessToken: accessToken) { [weak self] photos in
-               guard let self = self, let photos = photos else {
-                   print("Failed to fetch photos")
-                   return
-               }
-               
-               self.photos.append(contentsOf: photos)
-               
-               self.photos.sort(by: { $0.1 > $1.1 })
-               
-               DispatchQueue.main.async {
-                   self.collectionView.reloadData()
-               }
-           }
-       }
+            let dispatchGroup = DispatchGroup()
+            
+            for album in albums {
+                if let albumId = album["id"] as? Int {
+                   
+                    dispatchGroup.enter()
+                    
+                    self.fetchPhotosFromAlbum(albumId: albumId) { success in
+                       
+                        dispatchGroup.leave()
+                    }
+                }
+            }
+            
+            dispatchGroup.notify(queue: .main) {
+                self.photos.sort(by: { $0.photoDate > $1.photoDate })
+                self.collectionView.reloadData()
+                print("All photos loaded and UI updated")
+                print("\(self.photos.count) photos ")
+                self.activityIndicator.stopAnimating()
+                self.activityIndicator.isHidden = true
+            }
+        }
+    }
+
+    private func fetchPhotosFromAlbum(albumId: Int, completion: @escaping (Bool) -> Void) {
+        guard let accessToken = accessToken else {
+            print("No access token available")
+            completion(false)
+            return
+        }
+        
+        networkService.fetchPhotos(albumId: albumId, accessToken: accessToken) { [weak self] photos in
+            guard let self = self, let photos = photos else {
+                print("Failed to fetch photos")
+                completion(false)
+                return
+            }
+            
+            self.photos.append(contentsOf: photos)
+            completion(true)
+        }
+    }
 }
 
 extension PhotoViewController: UICollectionViewDataSource, UICollectionViewDelegate {
@@ -97,7 +124,7 @@ extension PhotoViewController: UICollectionViewDataSource, UICollectionViewDeleg
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoCell.reuseId, for: indexPath) as? PhotoCell else {
             return UICollectionViewCell()
         }
-        let photoUrlString = photos[indexPath.item].0
+        let photoUrlString = photos[indexPath.item].photoUrl
 
         cell.configure(with: photoUrlString)
         
@@ -105,8 +132,8 @@ extension PhotoViewController: UICollectionViewDataSource, UICollectionViewDeleg
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let photoUrlString = photos[indexPath.item].0
-        let photoDate = photos[indexPath.item].1
+        let photoUrlString = photos[indexPath.item].photoUrl
+        let photoDate = photos[indexPath.item].photoDate
         
         let vc = PhotoInfoViewController(urlString: photoUrlString, photoDate: photoDate)
         navigationController?.pushViewController(vc, animated: true)

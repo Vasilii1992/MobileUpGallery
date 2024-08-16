@@ -7,7 +7,6 @@ class VideoCell: UICollectionViewCell {
     
     static let reuseId = "VideoCell"
     
-  
     private let videoImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
@@ -15,8 +14,6 @@ class VideoCell: UICollectionViewCell {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
-    
-    
     
     private let overlayView: UIView = {
         let view = UIView()

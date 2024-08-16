@@ -1,18 +1,12 @@
-//
-//  NetworkService.swift
-//  MobileUpGallery
-//
-//  Created by Василий Тихонов on 14.08.2024.
-//
 
 import Foundation
 
 class NetworkService {
 
     static let shared = NetworkService()
-    
     private init() { }
     
+// MARK: - Fetch Photo
     func fetchAlbums(accessToken: String, completion: @escaping ([[String: Any]]?) -> Void) {
         let groupId = "-128666765"
         let method = "photos.getAlbums"
@@ -55,8 +49,8 @@ class NetworkService {
         
         task.resume()
     }
-    
-    func fetchPhotos(albumId: Int, accessToken: String, completion: @escaping ([(String, Int)]?) -> Void) {
+
+    func fetchPhotos(albumId: Int, accessToken: String, completion: @escaping ([Photo]?) -> Void) {
         let groupId = "-128666765"
         let method = "photos.get"
         let version = "5.131"
@@ -82,21 +76,35 @@ class NetworkService {
             }
             
             do {
-                if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
-                   let response = json["response"] as? [String: Any],
-                   let items = response["items"] as? [[String: Any]] {
-                    
-                    let photos = items.compactMap { item -> (String, Int)? in
-                        if let sizes = item["sizes"] as? [[String: Any]],
-                           let largestSize = sizes.max(by: { ($0["width"] as? Int ?? 0) < ($1["width"] as? Int ?? 0) }),
-                           let url = largestSize["url"] as? String,
-                           let date = item["date"] as? Int {
-                            return (url, date)
+                if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                    if let errorResponse = json["error"] as? [String: Any],
+                       let errorCode = errorResponse["error_code"] as? Int, errorCode == 6 {
+                        print("Rate limit exceeded, retrying...")
+                        // повторяю попытку
+                        DispatchQueue.global().asyncAfter(deadline: .now() + 1.0) {
+                            self.fetchPhotos(albumId: albumId, accessToken: accessToken, completion: completion)
                         }
-                        return nil
+                        return
                     }
                     
-                    completion(photos)
+                    if let response = json["response"] as? [String: Any],
+                       let items = response["items"] as? [[String: Any]] {
+                        
+                        let photos = items.compactMap { item -> Photo? in
+                            if let sizes = item["sizes"] as? [[String: Any]],
+                               let largestSize = sizes.max(by: { ($0["width"] as? Int ?? 0) < ($1["width"] as? Int ?? 0) }),
+                               let url = largestSize["url"] as? String,
+                               let date = item["date"] as? Int {
+                                return Photo(photoUrl: url, photoDate: date)
+                            }
+                            return nil
+                        }
+                        
+                        completion(photos)
+                    } else {
+                        print("Failed to parse JSON response")
+                        completion(nil)
+                    }
                 } else {
                     print("Failed to parse JSON response")
                     completion(nil)
@@ -110,7 +118,7 @@ class NetworkService {
         task.resume()
     }
 }
-
+// MARK: - Fetch Video
 extension NetworkService {
     
     func fetchVideos(accessToken: String, completion: @escaping ([Video]?) -> Void) {

@@ -14,27 +14,61 @@ class VideoInfoViewController: UIViewController, WKUIDelegate, WKNavigationDeleg
     var videoTitle: String?
     var videoUrl: String?
     
-    private var webView: WKWebView!
+    private var webView: WKWebView = {
+        let webConfiguration = WKWebViewConfiguration()
+        webConfiguration.allowsInlineMediaPlayback = false
+        webConfiguration.mediaTypesRequiringUserActionForPlayback = []
+        var webView = WKWebView()
+        webView = WKWebView(frame: .zero, configuration: webConfiguration)
+        
+        return webView
+    }()
+    
+    private lazy var actionBarButtonItem: UIBarButtonItem = {
+        let barButtonItem = UIBarButtonItem(barButtonSystemItem: .action,
+                                            target: self,
+                                            action: #selector(actionBarButtonTapped))
+        barButtonItem.tintColor = .black
+        return barButtonItem
+    }()
+    
+    private lazy var exitBarButtonItem: UIBarButtonItem = {
+        let barButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.left"),
+                                            style: .plain,
+                                            target: self,
+                                            action: #selector(exitBarButtonItemTapped))
+        barButtonItem.tintColor = .black
+        return barButtonItem
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         self.title = videoTitle
-        setupWebView()
+        setupViews()
+        setupDelegate()
+        setConstraints()
         loadVideo()
+        setupNavigationBar()
     }
     
-    private func setupWebView() {
-        let webConfiguration = WKWebViewConfiguration()
-        webConfiguration.allowsInlineMediaPlayback = false
-        webConfiguration.mediaTypesRequiringUserActionForPlayback = []
-        
-        webView = WKWebView(frame: .zero, configuration: webConfiguration)
+    @objc func actionBarButtonTapped(sender: UIBarButtonItem) {
+
+    }
+    
+    @objc func exitBarButtonItemTapped() {
+        navigationController?.popViewController(animated: true)
+    }
+    
+    private func setupViews() {
+        view.addSubview(webView)
+    }
+    private func setupDelegate() {
         webView.uiDelegate = self
         webView.navigationDelegate = self
-        
-        view.addSubview(webView)
-        
+    }
+    
+    private func setConstraints() {
         webView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             webView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -42,6 +76,10 @@ class VideoInfoViewController: UIViewController, WKUIDelegate, WKNavigationDeleg
             webView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             webView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+    }
+    private func setupNavigationBar() {
+        navigationItem.leftBarButtonItem = exitBarButtonItem
+        navigationItem.rightBarButtonItem = actionBarButtonItem
     }
     
     private func loadVideo() {

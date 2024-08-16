@@ -10,5 +10,5 @@ import Foundation
 struct Photo {
     
     var photoUrl: String
-    var photoDate: String
+    var photoDate: Int
 }

@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import SDWebImage
 
 class PhotoViewController: UIViewController {
     
@@ -68,29 +67,39 @@ class PhotoViewController: UIViewController {
             
             switch result {
             case .success(let albums):
-                let dispatchGroup = DispatchGroup()
-                
+                let fetchQueue = DispatchQueue(label: "photoFetchQueue", attributes: .concurrent)
+                let group = DispatchGroup()
+
                 for album in albums {
                     if let albumId = album["id"] as? Int {
-                        dispatchGroup.enter()
-                        self.fetchPhotosFromAlbum(albumId: albumId) { success in
-                            dispatchGroup.leave()
+                        group.enter()
+                        fetchQueue.async(group: group) {
+                            self.fetchPhotosFromAlbum(albumId: albumId) { success in
+                                if success {
+                                    DispatchQueue.main.async {
+                                        self.photos.sort(by: { $0.photoDate > $1.photoDate })
+                                        self.collectionView.reloadData()
+                                        
+                                        if self.photos.count > 0 && !self.activityIndicator.isHidden {
+                                            self.activityIndicator.stopAnimating()
+                                            self.activityIndicator.isHidden = true
+                                        }
+                                    }
+                                }
+                                group.leave()
+                            }
                         }
                     }
                 }
                 
-                dispatchGroup.notify(queue: .main) {
-                    self.photos.sort(by: { $0.photoDate > $1.photoDate })
-                    self.collectionView.reloadData()
+                group.notify(queue: .main) {
                     print("All photos loaded and UI updated")
                     print("\(self.photos.count) photos")
-                    self.activityIndicator.stopAnimating()
-                    self.activityIndicator.isHidden = true
+
                 }
                 
             case .failure(let error):
                 self.showAlert(title: "Failed to Fetch Albums", message: error.localizedDescription)
-
             }
         }
     }
@@ -119,7 +128,6 @@ class PhotoViewController: UIViewController {
             }
         }
     }
-  
 }
 
 extension PhotoViewController: UICollectionViewDataSource, UICollectionViewDelegate {

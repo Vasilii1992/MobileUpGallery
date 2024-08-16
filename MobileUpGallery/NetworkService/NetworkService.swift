@@ -5,7 +5,7 @@ class NetworkService {
 
     static let shared = NetworkService()
     private init() { }
-
+    
     // MARK: - Fetch Photo
     func fetchAlbums(accessToken: String, completion: @escaping (Result<[[String: Any]], NetworkError>) -> Void) {
         let groupId = "-128666765"

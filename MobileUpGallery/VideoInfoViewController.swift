@@ -18,10 +18,7 @@ class VideoInfoViewController: UIViewController, WKUIDelegate, WKNavigationDeleg
         let webConfiguration = WKWebViewConfiguration()
         webConfiguration.allowsInlineMediaPlayback = false
         webConfiguration.mediaTypesRequiringUserActionForPlayback = []
-        var webView = WKWebView()
-        webView = WKWebView(frame: .zero, configuration: webConfiguration)
-        
-        return webView
+        return WKWebView(frame: .zero, configuration: webConfiguration)
     }()
     
     private lazy var actionBarButtonItem: UIBarButtonItem = {
@@ -53,8 +50,15 @@ class VideoInfoViewController: UIViewController, WKUIDelegate, WKNavigationDeleg
     }
     
     @objc func actionBarButtonTapped(sender: UIBarButtonItem) {
-
+        guard let videoUrlString = videoUrl, let url = URL(string: videoUrlString) else {
+            showAlert(title: "Error", message: "Invalid video URL for sharing")
+            return
+        }
+        
+        let activityViewController = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+        present(activityViewController, animated: true, completion: nil)
     }
+
     
     @objc func exitBarButtonItemTapped() {
         navigationController?.popViewController(animated: true)
@@ -84,7 +88,7 @@ class VideoInfoViewController: UIViewController, WKUIDelegate, WKNavigationDeleg
     
     private func loadVideo() {
         guard let videoUrlString = videoUrl, let url = URL(string: videoUrlString) else {
-            print("Invalid video URL")
+            showAlert(title: "Error", message: "Invalid video URL")
             return
         }
         
@@ -109,6 +113,12 @@ class VideoInfoViewController: UIViewController, WKUIDelegate, WKNavigationDeleg
             webView.load(navigationAction.request)
         }
         return nil
+    }
+    
+    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        showAlert(title: "Error", message: "Failed to load content with error: \(error.localizedDescription)")
+ 
+        
     }
 }
 

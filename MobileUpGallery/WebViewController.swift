@@ -10,6 +10,7 @@ import WebKit
 
 protocol WebViewControllerDelegate: AnyObject {
     func didReceiveAccessToken(_ token: String)
+    func didCancelAuthorization()
 }
 
 class WebViewController: UIViewController {
@@ -24,6 +25,9 @@ class WebViewController: UIViewController {
         self.url = url
         super.init(nibName: nil, bundle: nil)
         webView.navigationDelegate = self
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(cancelTapped))
+
 
     }
     
@@ -39,6 +43,10 @@ class WebViewController: UIViewController {
         setConstraints()
    
     }
+    
+    @objc private func cancelTapped() {
+         delegate?.didCancelAuthorization()
+     }
     
     private func webViewLoad(url: URL) {
 

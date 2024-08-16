@@ -97,5 +97,9 @@ extension MainViewController: WebViewControllerDelegate {
             
         }
     }
-    
+    func didCancelAuthorization() {
+        dismiss(animated: true) {
+            self.showAlert(title: "Authorization Cancelled", message: "You have cancelled the authorization process.")
+        }
+    }
 }

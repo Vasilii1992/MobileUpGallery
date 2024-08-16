@@ -105,10 +105,9 @@
 		6B40435C2C6B463A007E957D /* MobileUpGallery */ = {
 			isa = PBXGroup;
 			children = (
-				6BFBFEC12C6FB09C0010146E /* Extensions */,
-				6B2F235F2C6E983C0050A7D1 /* Models */,
 				6B4043712C6B4658007E957D /* Application */,
 				6B32230D2C6D4EC700D3FA9F /* UICollectionView */,
+				6B2F235F2C6E983C0050A7D1 /* Models */,
 				6BE9CC852C6D21A300A1420A /* NetworkService */,
 				6B4043612C6B463A007E957D /* MainViewController.swift */,
 				6BA136422C6B56AF00F9E798 /* WebViewController.swift */,
@@ -118,6 +117,7 @@
 				6BE9CC8F2C6D409600A1420A /* Cells */,
 				6BA1364D2C6B66A900F9E798 /* VideoViewController.swift */,
 				6BFBFEBD2C6F64750010146E /* VideoInfoViewController.swift */,
+				6BFBFEC12C6FB09C0010146E /* Extensions */,
 				6B4043722C6B466B007E957D /* SupportingFiles */,
 			);
 			path = MobileUpGallery;

@@ -26,6 +26,7 @@
 		6BCF80592C6DF80200D8BB1B /* PhotoInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BCF80582C6DF80200D8BB1B /* PhotoInfoViewController.swift */; };
 		6BE9CC8C2C6D287700A1420A /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE9CC8B2C6D287700A1420A /* NetworkService.swift */; };
 		6BE9CC8E2C6D2ED200A1420A /* UrlComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE9CC8D2C6D2ED200A1420A /* UrlComponents.swift */; };
+		6BFBFEBE2C6F64750010146E /* VideoInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BFBFEBD2C6F64750010146E /* VideoInfoViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +49,7 @@
 		6BCF80582C6DF80200D8BB1B /* PhotoInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoInfoViewController.swift; sourceTree = "<group>"; };
 		6BE9CC8B2C6D287700A1420A /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		6BE9CC8D2C6D2ED200A1420A /* UrlComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrlComponents.swift; sourceTree = "<group>"; };
+		6BFBFEBD2C6F64750010146E /* VideoInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoInfoViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,6 +112,7 @@
 				6BCF80582C6DF80200D8BB1B /* PhotoInfoViewController.swift */,
 				6BE9CC8F2C6D409600A1420A /* Cells */,
 				6BA1364D2C6B66A900F9E798 /* VideoViewController.swift */,
+				6BFBFEBD2C6F64750010146E /* VideoInfoViewController.swift */,
 				6B4043722C6B466B007E957D /* SupportingFiles */,
 			);
 			path = MobileUpGallery;
@@ -239,6 +242,7 @@
 				6BE9CC8C2C6D287700A1420A /* NetworkService.swift in Sources */,
 				6B15C2FC2C6E391400F1AD87 /* VideoCell.swift in Sources */,
 				6B2F23632C6E9B710050A7D1 /* Photo.swift in Sources */,
+				6BFBFEBE2C6F64750010146E /* VideoInfoViewController.swift in Sources */,
 				6BA136502C6BEB1F00F9E798 /* PhotoCell.swift in Sources */,
 				6B4043602C6B463A007E957D /* SceneDelegate.swift in Sources */,
 				6BA136432C6B56AF00F9E798 /* WebViewController.swift in Sources */,

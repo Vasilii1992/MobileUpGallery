@@ -89,8 +89,13 @@ extension VideoViewController: UICollectionViewDataSource, UICollectionViewDeleg
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-
+        let video = videos[indexPath.item]
+        let videoInfoVC = VideoInfoViewController()
+        videoInfoVC.videoTitle = video.title
+        videoInfoVC.videoUrl = video.videoUrl
+        navigationController?.pushViewController(videoInfoVC, animated: true)
     }
+
 }
 
 extension VideoViewController: UICollectionViewDelegateFlowLayout {

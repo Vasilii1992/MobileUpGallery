@@ -25,3 +25,4 @@ class PhotoCollectionView {
         return collectionView
     }
 }
+

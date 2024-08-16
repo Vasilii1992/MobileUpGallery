@@ -139,9 +139,9 @@ extension NetworkService {
             }
             
             // Распечатать сырой JSON ответ
-            if let jsonString = String(data: data, encoding: .utf8) {
-              //  print("Raw JSON response: \(jsonString)")
-            }
+//            if let jsonString = String(data: data, encoding: .utf8) {
+//                print("Raw JSON response: \(jsonString)")
+//            }
 
             do {
                 if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],

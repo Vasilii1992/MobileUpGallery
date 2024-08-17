@@ -8,7 +8,7 @@ final class GalleryViewController: UIViewController {
     private lazy var segmentControl: UISegmentedControl = {
         let segmentControl = UISegmentedControl(items: ["Фото", "Видео"])
         segmentControl.translatesAutoresizingMaskIntoConstraints = false
-        segmentControl.selectedSegmentIndex = 0
+        segmentControl.selectedSegmentIndex = 0        
         segmentControl.addTarget(self, action: #selector(segmentAction), for: .valueChanged)
         return segmentControl
     }()

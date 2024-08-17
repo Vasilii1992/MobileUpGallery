@@ -12,7 +12,7 @@ final class VideoCell: UICollectionViewCell {
     private let overlayView: UIView = {
         let view = UIView()
         view.layer.cornerRadius = 20
-        view.backgroundColor = UIColor.white.withAlphaComponent(0.6)
+        view.backgroundColor = UIColor.white.withAlphaComponent(0.5)
         view.translatesAutoresizingMaskIntoConstraints = false
         //максимальный и минимальный размер view
         view.widthAnchor.constraint(greaterThanOrEqualToConstant: 60).isActive = true

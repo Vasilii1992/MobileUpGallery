@@ -36,8 +36,9 @@ final class MainViewController: UIViewController {
             galleryLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             
             authorizationButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            authorizationButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -40),
-            authorizationButton.widthAnchor.constraint(equalToConstant: 343),
+            authorizationButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -42),
+            authorizationButton.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: 16),
+            authorizationButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             authorizationButton.heightAnchor.constraint(equalToConstant: 52)
         ])
     }

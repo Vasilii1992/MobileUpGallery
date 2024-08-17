@@ -1,9 +1,3 @@
-//
-//  NetworkError.swift
-//  MobileUpGallery
-//
-//  Created by Василий Тихонов on 16.08.2024.
-//
 
 import Foundation
 
@@ -14,7 +8,6 @@ enum NetworkError: Error {
     case jsonParsingError(Error)
     case rateLimitExceeded
     case unknownError
-    
     
     var localizedDescription: String {
         switch self {
@@ -33,4 +26,3 @@ enum NetworkError: Error {
         }
     }
 }
-

@@ -1,18 +1,14 @@
-//
-//  VideoInfoViewController.swift
-//  MobileUpGallery
-//
-//  Created by Василий Тихонов on 16.08.2024.
-//
 
 
 import UIKit
 import WebKit
 
-class VideoInfoViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
+final class VideoInfoViewController: UIViewController{
     
     var videoTitle: String?
     var videoUrl: String?
+    
+//MARK: - UIViews
     
     private var webView: WKWebView = {
         let webConfiguration = WKWebViewConfiguration()
@@ -21,27 +17,15 @@ class VideoInfoViewController: UIViewController, WKUIDelegate, WKNavigationDeleg
         return WKWebView(frame: .zero, configuration: webConfiguration)
     }()
     
-    private lazy var actionBarButtonItem: UIBarButtonItem = {
-        let barButtonItem = UIBarButtonItem(barButtonSystemItem: .action,
-                                            target: self,
-                                            action: #selector(actionBarButtonTapped))
-        barButtonItem.tintColor = .black
-        return barButtonItem
-    }()
+    private lazy var actionBarButtonItem = BarButtonItems.createActionBarButtonItem(target: self, action: #selector(actionBarButtonTapped))
     
-    private lazy var exitBarButtonItem: UIBarButtonItem = {
-        let barButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.left"),
-                                            style: .plain,
-                                            target: self,
-                                            action: #selector(exitBarButtonItemTapped))
-        barButtonItem.tintColor = .black
-        return barButtonItem
-    }()
+    private lazy var backBarButtonItem = BarButtonItems.createBackBarButtonItem(target: self, action: #selector(backBarButtonItemTapped))
+    
+//MARK: - ViewDidLoad
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
-        self.title = videoTitle
+
         setupViews()
         setupDelegate()
         setConstraints()
@@ -60,11 +44,13 @@ class VideoInfoViewController: UIViewController, WKUIDelegate, WKNavigationDeleg
     }
 
     
-    @objc func exitBarButtonItemTapped() {
+    @objc func backBarButtonItemTapped() {
         navigationController?.popViewController(animated: true)
     }
     
     private func setupViews() {
+        view.backgroundColor = .white
+        self.title = videoTitle
         view.addSubview(webView)
     }
     private func setupDelegate() {
@@ -82,7 +68,7 @@ class VideoInfoViewController: UIViewController, WKUIDelegate, WKNavigationDeleg
         ])
     }
     private func setupNavigationBar() {
-        navigationItem.leftBarButtonItem = exitBarButtonItem
+        navigationItem.leftBarButtonItem = backBarButtonItem
         navigationItem.rightBarButtonItem = actionBarButtonItem
     }
     
@@ -95,6 +81,10 @@ class VideoInfoViewController: UIViewController, WKUIDelegate, WKNavigationDeleg
         let request = URLRequest(url: url)
         webView.load(request)
     }
+}
+// MARK: - WKUIDelegate, WKNavigationDelegate
+
+extension VideoInfoViewController: WKUIDelegate, WKNavigationDelegate  {
     
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         print("Started loading content")
@@ -118,7 +108,5 @@ class VideoInfoViewController: UIViewController, WKUIDelegate, WKNavigationDeleg
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         showAlert(title: "Error", message: "Failed to load content with error: \(error.localizedDescription)")
  
-        
     }
 }
-

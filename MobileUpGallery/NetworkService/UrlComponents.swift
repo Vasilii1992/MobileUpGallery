@@ -1,9 +1,3 @@
-//
-//  UrlComponents.swift
-//  MobileUpGallery
-//
-//  Created by Василий Тихонов on 14.08.2024.
-//
 
 import Foundation
 

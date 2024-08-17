@@ -1,10 +1,10 @@
 
 import UIKit
 
-class GalleryViewController: UIViewController {
+final class GalleryViewController: UIViewController {
     
     var accessToken: String?
-
+    // MARK: - UIViews
     private lazy var segmentControl: UISegmentedControl = {
         let segmentControl = UISegmentedControl(items: ["Фото", "Видео"])
         segmentControl.translatesAutoresizingMaskIntoConstraints = false
@@ -25,7 +25,6 @@ class GalleryViewController: UIViewController {
     private lazy var photoViewController: PhotoViewController = {
         let viewController = PhotoViewController()
         viewController.accessToken = accessToken
-        
         addChild(viewController)
         viewController.view.translatesAutoresizingMaskIntoConstraints = false
         return viewController
@@ -38,13 +37,35 @@ class GalleryViewController: UIViewController {
         viewController.view.translatesAutoresizingMaskIntoConstraints = false
         return viewController
     }()
-
+    // MARK: - ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
         setConstraints()
         segmentAction(sender: segmentControl)
         
+    }
+
+    private func setupViews() {
+        title = "Mobile Up Gallery"
+        view.backgroundColor = .white
+        view.addSubview(segmentControl)
+        
+        view.addSubview(photoViewController.view)
+        view.addSubview(videoViewController.view)
+        
+        photoViewController.didMove(toParent: self)
+        videoViewController.didMove(toParent: self)
+        
+        navigationItem.rightBarButtonItem = exitBarButtonItem
+    }
+    
+    private func showViewController(_ viewController: UIViewController) {
+        viewController.view.isHidden = false
+    }
+    
+    private func hideViewController(_ viewController: UIViewController) {
+        viewController.view.isHidden = true
     }
     
     @objc func exitBarButtonItemTapped() {
@@ -63,29 +84,6 @@ class GalleryViewController: UIViewController {
         default:
             break
         }
-    }
-    
-    private func setupViews() {
-        title = "Mobile Up Gallery"
-        view.backgroundColor = .white
-        view.addSubview(segmentControl)
-        
-        view.addSubview(photoViewController.view)
-        view.addSubview(videoViewController.view)
-        
-        photoViewController.didMove(toParent: self)
-        videoViewController.didMove(toParent: self)
-        
-        navigationItem.rightBarButtonItem = exitBarButtonItem
-
-    }
-    
-    private func showViewController(_ viewController: UIViewController) {
-        viewController.view.isHidden = false
-    }
-    
-    private func hideViewController(_ viewController: UIViewController) {
-        viewController.view.isHidden = true
     }
     
     private func setConstraints() {

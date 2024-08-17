@@ -1,26 +1,24 @@
-//
-//  PhotoViewController.swift
-//  MobileUpGallery
-//
-//  Created by Василий Тихонов on 13.08.2024.
-//
 
 import UIKit
 
-class PhotoViewController: UIViewController {
+final class PhotoViewController: UIViewController {
     
     var accessToken: String?
     var photos: [Photo] = []
     
     private let networkService = NetworkService.shared
-
-    let collectionView = PhotoCollectionView.createPhotoCollectionView()
+    
+// MARK: - UIViews
+    
+    private let collectionView = CollectionView()
     
     private let activityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .large)
         indicator.translatesAutoresizingMaskIntoConstraints = false
         return indicator
     }()
+    
+// MARK: - ViewDidLoad
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,6 +35,7 @@ class PhotoViewController: UIViewController {
 
          activityIndicator.startAnimating()
         
+        collectionView.register(PhotoCell.self, forCellWithReuseIdentifier: PhotoCell.reuseId)
     }
     
     private func setDelegate() {
@@ -55,6 +54,8 @@ class PhotoViewController: UIViewController {
             activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
     }
+    
+// MARK: - Receive albums and photos from the server
     
     private func fetchAlbumsAndPhotos() {
         guard let accessToken = accessToken else {
@@ -130,6 +131,8 @@ class PhotoViewController: UIViewController {
     }
 }
 
+// MARK: - UICollectionViewDataSource, UICollectionViewDelegate
+
 extension PhotoViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return photos.count
@@ -157,6 +160,7 @@ extension PhotoViewController: UICollectionViewDataSource, UICollectionViewDeleg
 }
 
 // MARK: - UICollectionViewDelegateFlowLayout
+
 extension PhotoViewController: UICollectionViewDelegateFlowLayout {
     
     private var numberOfColumns: Int { return 2 }

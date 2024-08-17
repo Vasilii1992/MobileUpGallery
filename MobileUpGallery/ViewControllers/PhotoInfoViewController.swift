@@ -1,16 +1,10 @@
-//
-//  PhotoInfoViewController.swift
-//  MobileUpGallery
-//
-//  Created by Василий Тихонов on 15.08.2024.
-//
+
 
 import UIKit
 import SDWebImage
 import Photos
 
-
-class PhotoInfoViewController: UIViewController {
+final class PhotoInfoViewController: UIViewController {
     
     let urlString: String
     let photoDate: Int
@@ -25,30 +19,15 @@ class PhotoInfoViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private lazy var actionBarButtonItem: UIBarButtonItem = {
-        let barButtonItem = UIBarButtonItem(barButtonSystemItem: .action,
-                                            target: self,
-                                            action: #selector(actionBarButtonTapped))
-        barButtonItem.tintColor = .black
-        return barButtonItem
-    }()
+//MARK: - UIViews
     
-    private lazy var exitBarButtonItem: UIBarButtonItem = {
-        let barButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.left"),
-                                            style: .plain,
-                                            target: self,
-                                            action: #selector(exitBarButtonItemTapped))
-        barButtonItem.tintColor = .black
-        return barButtonItem
-    }()
+    private lazy var actionBarButtonItem = BarButtonItems.createActionBarButtonItem(target: self, action: #selector(actionBarButtonTapped))
     
-    let photoImageView: UIImageView = {
-        let image = UIImageView()
-        image.contentMode = .scaleAspectFill
-        image.clipsToBounds = true
-        image.translatesAutoresizingMaskIntoConstraints = false
-        return image
-    }()
+    private lazy var backBarButtonItem = BarButtonItems.createBackBarButtonItem(target: self, action: #selector(backBarButtonItemTapped))
+
+    let photoImageView = ImageView(frame: .zero)
+    
+//MARK: - ViewDidLoad
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -81,15 +60,13 @@ class PhotoInfoViewController: UIViewController {
             } else if success, let activityType = activity, activityType == .saveToCameraRoll {
 
                 self.showAlert(title: "Success", message: "Photo saved to gallery!")
-
             }
         }
         
         present(activityViewController, animated: true, completion: nil)
     }
 
-
-    @objc func exitBarButtonItemTapped() {
+    @objc func backBarButtonItemTapped() {
         navigationController?.popViewController(animated: true)
     }
     
@@ -106,7 +83,7 @@ class PhotoInfoViewController: UIViewController {
     }
     
     private func setupNavigationBar() {
-        navigationItem.leftBarButtonItem = exitBarButtonItem
+        navigationItem.leftBarButtonItem = backBarButtonItem
         navigationItem.rightBarButtonItem = actionBarButtonItem
     }
     

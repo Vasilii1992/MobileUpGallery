@@ -1,29 +1,14 @@
-//
-//  VideoViewController.swift
-//  MobileUpGallery
-//
-//  Created by Василий Тихонов on 13.08.2024.
-//
 
 import UIKit
 
-class VideoViewController: UIViewController {
+final class VideoViewController: UIViewController {
     
     var accessToken: String?
     var videos: [Video] = []
     
     private let networkService = NetworkService.shared
     
-    let collectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.backgroundColor = .white
-        collectionView.register(VideoCell.self, forCellWithReuseIdentifier: VideoCell.reuseId)
-        collectionView.showsVerticalScrollIndicator = false
-
-        return collectionView
-    }()
+    private let collectionView = CollectionView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,6 +21,8 @@ class VideoViewController: UIViewController {
     private func setupViews() {
         view.backgroundColor = .white
         view.addSubview(collectionView)
+        
+        collectionView.register(VideoCell.self, forCellWithReuseIdentifier: VideoCell.reuseId)
     }
     
     private func setDelegate() {
@@ -75,7 +62,7 @@ class VideoViewController: UIViewController {
     }
 
 }
-
+// MARK: - UICollectionViewDataSource, UICollectionViewDelegate
 extension VideoViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return videos.count
@@ -100,7 +87,7 @@ extension VideoViewController: UICollectionViewDataSource, UICollectionViewDeleg
     }
 
 }
-
+// MARK: - UICollectionViewDelegateFlowLayout
 extension VideoViewController: UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

@@ -1,24 +1,13 @@
-//
-//  PhotoCell.swift
-//  MobileUpGallery
-//
-//  Created by Василий Тихонов on 13.08.2024.
-//
+
 
 import UIKit
 import SDWebImage
 
-class PhotoCell: UICollectionViewCell {
+final class PhotoCell: UICollectionViewCell {
     
     static let reuseId = "PhotoCell"
     
-    let photoImageView: UIImageView = {
-       let image = UIImageView()
-       image.translatesAutoresizingMaskIntoConstraints = false
-       image.contentMode = .scaleAspectFill
-       image.clipsToBounds = true
-       return image
-   }()
+    let photoImageView = ImageView(frame: .zero)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -35,14 +24,15 @@ class PhotoCell: UICollectionViewCell {
         photoImageView.image = UIImage(named: "placeholder") 
     }
     
-    
     private func setupPhotoImageView() {
         contentView.addSubview(photoImageView)
-        photoImageView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
-        photoImageView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
-        photoImageView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
-        photoImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
-
+        
+        NSLayoutConstraint.activate([
+            photoImageView.topAnchor.constraint(equalTo: topAnchor),
+            photoImageView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            photoImageView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            photoImageView.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ])
     }
     
     func configure(with urlString: String) {

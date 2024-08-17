@@ -3,17 +3,11 @@
 import UIKit
 import SDWebImage
 
-class VideoCell: UICollectionViewCell {
+final class VideoCell: UICollectionViewCell {
     
     static let reuseId = "VideoCell"
     
-    private let videoImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }()
+    private let videoImageView = ImageView(frame: .zero)
     
     private let overlayView: UIView = {
         let view = UIView()
@@ -27,17 +21,8 @@ class VideoCell: UICollectionViewCell {
         return view
     }()
     
-  
-    private let overlayTextLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 13, weight: .semibold)
-        label.textColor = .black
-        label.numberOfLines = 2
-        label.textAlignment = .right
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
+    private let overlayTextLabel = Label(fontSize: 13, weight: .semibold, alignment: .right)
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
@@ -56,9 +41,9 @@ class VideoCell: UICollectionViewCell {
 
     private func setConstraints() {
         NSLayoutConstraint.activate([
-            videoImageView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            videoImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            videoImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            videoImageView.topAnchor.constraint(equalTo: topAnchor),
+            videoImageView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            videoImageView.trailingAnchor.constraint(equalTo: trailingAnchor),
             videoImageView.heightAnchor.constraint(equalToConstant: 210),
             
             overlayView.bottomAnchor.constraint(equalTo: videoImageView.bottomAnchor, constant: -20),
@@ -73,7 +58,6 @@ class VideoCell: UICollectionViewCell {
         ])
     }
 
-    
     func configure(with title: String, videoUrl: String, thumbnailUrl: String) {
   
         overlayTextLabel.text = title

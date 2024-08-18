@@ -12,8 +12,6 @@ final class AuthorizationButton {
            button.titleLabel?.font = .systemFont(ofSize: 15, weight: .semibold)
            button.layer.cornerRadius = 15
            button.translatesAutoresizingMaskIntoConstraints = false
-           button.widthAnchor.constraint(equalToConstant: 343).isActive = true
-           button.heightAnchor.constraint(equalToConstant: 52).isActive = true
            return button
     }
 }

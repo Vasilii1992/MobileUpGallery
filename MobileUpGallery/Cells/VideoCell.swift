@@ -14,7 +14,7 @@ final class VideoCell: UICollectionViewCell {
         view.layer.cornerRadius = 20
         view.backgroundColor = UIColor.white.withAlphaComponent(0.5)
         view.translatesAutoresizingMaskIntoConstraints = false
-        //максимальный и минимальный размер view
+      
         view.widthAnchor.constraint(greaterThanOrEqualToConstant: 60).isActive = true
         view.widthAnchor.constraint(lessThanOrEqualToConstant: 230).isActive = true
 

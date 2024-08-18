@@ -14,6 +14,11 @@ final class MainViewController: UIViewController {
         super.viewDidLoad()
         setupViews()
         setConstraints()
+
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         
         if let token = UserDefaults.standard.string(forKey: "vkAccessToken") {
             goToGalleryViewController(token: token)
@@ -35,7 +40,6 @@ final class MainViewController: UIViewController {
             galleryLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             galleryLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             
-            authorizationButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             authorizationButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -42),
             authorizationButton.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: 16),
             authorizationButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),

@@ -2,7 +2,7 @@
 import Foundation
 
 final class NetworkService {
-
+    
     static let shared = NetworkService()
     private init() { }
     
@@ -74,7 +74,6 @@ final class NetworkService {
                         DispatchQueue.global().asyncAfter(deadline: .now() + 1.0) {
                             self.fetchPhotos(albumId: albumId, accessToken: accessToken, completion: completion)
                         }
-                        print("Rate limit exceeded,trying…")
                         return
                     }
                     

@@ -6,7 +6,6 @@ final class MainViewController: UIViewController {
     
 // MARK: - UIViews
     let authorizationButton = AuthorizationButton.createAuthorizationButton(title: "Вход через VK")
-
     let galleryLabel = Label(labelText: "Mobile Up\nGallery", fontSize: 44, weight: .bold)
     
 // MARK: - ViewDidLoad
@@ -14,7 +13,17 @@ final class MainViewController: UIViewController {
         super.viewDidLoad()
         setupViews()
         setConstraints()
-
+        
+          NetworkMonitor.shared.statusChangeHandler = { [weak self] isConnected in
+              if isConnected {
+                  print("Internet is connected")
+              } else {
+                  print("Internet is not connected")
+                  DispatchQueue.main.async {
+                      self?.showAlert(title: "No Internet Connection", message: "Please check your internet connection and try again.")
+                  }
+              }
+          }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -55,11 +64,18 @@ final class MainViewController: UIViewController {
     }
     
     @objc func authorizationButtonTapped() {
-        
-        let webViewController = WebViewController(with: UrlComponents.createUrl())
-        webViewController.delegate = self
-        let navigation = UINavigationController(rootViewController: webViewController)
-        self.present(navigation, animated: true)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+            guard let self = self else { return }
+            if !NetworkMonitor.shared.isConnected {
+                self.showAlert(title: "No Internet Connection", message: "Please check your internet connection and try again.")
+                return
+            }
+
+            let webViewController = WebViewController(with: UrlComponents.createUrl())
+            webViewController.delegate = self
+            let navigation = UINavigationController(rootViewController: webViewController)
+            self.present(navigation, animated: true)
+        }
     }
 }
 

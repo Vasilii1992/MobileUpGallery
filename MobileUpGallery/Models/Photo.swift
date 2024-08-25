@@ -1,7 +1,7 @@
 
 import Foundation
 
-struct Photo {
+struct Photo: Decodable {
     var photoUrl: String
     var photoDate: Int
 }

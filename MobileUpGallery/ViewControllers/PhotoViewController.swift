@@ -14,6 +14,7 @@ final class PhotoViewController: UIViewController {
     
     private let activityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .large)
+     //   indicator.hidesWhenStopped = true  чтобы не прятать его , а он сам прятался когда останавливался.
         indicator.translatesAutoresizingMaskIntoConstraints = false
         return indicator
     }()
@@ -55,7 +56,7 @@ final class PhotoViewController: UIViewController {
         ])
     }
     
-// MARK: - Receive albums and photos from the server
+    // MARK: - Receive albums and photos from the server
     
     private func fetchAlbumsAndPhotos() {
         guard let accessToken = accessToken else {
@@ -64,43 +65,42 @@ final class PhotoViewController: UIViewController {
         }
         
         networkService.fetchAlbums(accessToken: accessToken) { [weak self] result in
-            guard let self = self else { return }
-            
-            switch result {
-            case .success(let albums):
-                let fetchQueue = DispatchQueue(label: "photoFetchQueue", attributes: .concurrent)
-                let group = DispatchGroup()
-
-                for album in albums {
-                    if let albumId = album["id"] as? Int {
-                        group.enter()
-                        fetchQueue.async(group: group) {
-                            self.fetchPhotosFromAlbum(albumId: albumId) { success in
-                                if success {
-                                    DispatchQueue.main.async {
-                                        self.photos.sort(by: { $0.photoDate > $1.photoDate })
-                                        self.collectionView.reloadData()
-                                        
-                                        if self.photos.count > 0 && !self.activityIndicator.isHidden {
-                                            self.activityIndicator.stopAnimating()
-                                            self.activityIndicator.isHidden = true
-                                        }
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                switch result {
+                case .success(let albums):
+                    let fetchQueue = DispatchQueue(label: "photoFetchQueue", attributes: .concurrent)
+                    let group = DispatchGroup()
+                    
+                    for album in albums {
+                        if let albumId = album["id"] as? Int {
+                            group.enter()
+                            fetchQueue.async(group: group) {
+                                self.fetchPhotosFromAlbum(albumId: albumId) { success in
+                                    if success {
+                                            self.photos.sort(by: { $0.photoDate > $1.photoDate })
+                                            self.collectionView.reloadData()
+                                            
+                                            if self.photos.count > 0 && !self.activityIndicator.isHidden {
+                                                self.activityIndicator.stopAnimating()
+                                                self.activityIndicator.isHidden = true
+                                            }
                                     }
+                                    group.leave()
                                 }
-                                group.leave()
                             }
                         }
                     }
+                    
+                    group.notify(queue: .main) {
+                        print("All photos loaded and UI updated")
+                        print("\(self.photos.count) photos")
+                        
+                    }
+                    
+                case .failure(let error):
+                    self.showAlert(title: "Failed to Fetch Albums", message: error.localizedDescription)
                 }
-                
-                group.notify(queue: .main) {
-                    print("All photos loaded and UI updated")
-                    print("\(self.photos.count) photos")
-
-                }
-                
-            case .failure(let error):
-                self.showAlert(title: "Failed to Fetch Albums", message: error.localizedDescription)
             }
         }
     }
@@ -111,21 +111,21 @@ final class PhotoViewController: UIViewController {
             completion(false)
             return
         }
-        
         networkService.fetchPhotos(albumId: albumId, accessToken: accessToken) { [weak self] result in
-            guard let self = self else {
-                completion(false)
-                return
-            }
-            
-            switch result {
-            case .success(let photos):
-                self.photos.append(contentsOf: photos)
-                completion(true)
-                
-            case .failure(let error):
-                self.showAlert(title: "Failed to Fetch Photos", message: error.localizedDescription)
-                completion(false)
+            DispatchQueue.main.async {
+                guard let self = self else {
+                    completion(false)
+                    return
+                }
+                switch result {
+                case .success(let photos):
+                    self.photos.append(contentsOf: photos)
+                    completion(true)
+                    
+                case .failure(let error):
+                    self.showAlert(title: "Failed to Fetch Photos", message: error.localizedDescription)
+                    completion(false)
+                }
             }
         }
     }
@@ -143,8 +143,10 @@ extension PhotoViewController: UICollectionViewDataSource, UICollectionViewDeleg
             return UICollectionViewCell()
         }
         let photoUrlString = photos[indexPath.item].photoUrl
+    
+            cell.configure(with: photoUrlString)
 
-        cell.configure(with: photoUrlString)
+       
         
         
         return cell
